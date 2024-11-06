@@ -197,4 +197,4 @@ linkyaxes!(ax1, ax2, ax3, ax4, ax5, ax6)
 
 fig
 
-save("jobcorps_ota_2_and_1.png", fig)
+save("Figure_3_Table_3/jobcorps_ota_2_and_1.png", fig)
