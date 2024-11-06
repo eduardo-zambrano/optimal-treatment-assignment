@@ -35,7 +35,7 @@ RHS(eeb_u, eea_l, gamma, z) = eeb_u - f_inv(f(eea_l, gamma) + (f(eeb_u,gamma) - 
 
 LHS(eeb_l, eea_u, gamma, z) = eea_u - f_inv(f(eea_u, gamma) + (f(eeb_l,gamma) - f(eea_u,gamma)) * z, gamma)
 
-# Solving
+# This function solves the egalitarian equivalent minimax regret decision problem 
 function solve_for_z(eeb_u, eea_l, eeb_l, eea_u, gamma)
     function system!(F, z)
         F[1] = RHS(eeb_u, eea_l, gamma, z[1]) - LHS(eeb_l, eea_u, gamma, z[1])
@@ -52,6 +52,19 @@ function solve_for_z(eeb_u, eea_l, eeb_l, eea_u, gamma)
     end
 end
 
+
+
+# Horowitz - Manski bounds on levels (From Michelle's calculations)
+gamma_0 = 0
+
+eea_u_hm_level = 10.7493
+eea_l_hm_level = 5.4431
+
+eeb_u_hm_level = 11.9906
+eeb_l_hm_level = 6.1253
+
+sol_hm_level = solve_for_z(eeb_u_hm_level, eea_l_hm_level, eeb_l_hm_level, eea_u_hm_level, gamma_0)
+
 # Horowitz - Manski bounds, gamma = 1 (from Lee 2009, p. 1080)
 gamma = 1
 
@@ -60,7 +73,6 @@ E_u_log_y_a = 2.332
 
 E_l_log_y_b = 1.586
 E_u_log_y_b = 2.321
-
 
 eea_u_hm = f_inv(E_u_log_y_a, gamma)
 eea_l_hm =f_inv(E_l_log_y_a, gamma)
@@ -87,19 +99,6 @@ eeb_u_hm_2 = f_inv(E_u_f_y_b_2, gamma)
 eeb_l_hm_2 =f_inv(E_l_f_y_b_2, gamma)
 
 sol_hm_2 = solve_for_z(eeb_u_hm_2, eea_l_hm_2, eeb_l_hm_2, eea_u_hm_2, gamma)
-
-
-
-# Horowitz - Manski bounds on levels (From Michelle's calculations)
-gamma_0 = 0 # The inequality aversion parameter
-
-eea_u_hm_level = 10.7493
-eea_l_hm_level = 5.4431
-
-eeb_u_hm_level = 11.9906
-eeb_l_hm_level = 6.1253
-
-sol_hm_level = solve_for_z(eeb_u_hm_level, eea_l_hm_level, eeb_l_hm_level, eea_u_hm_level, gamma_0)
 
 
 # Lee bounds, gamma = 1 (From Lee 2009, p. 1092)
@@ -199,55 +198,27 @@ z_values = 0:0.01:1
 # Calculate LHS and RHS values for Horowitz-Manski (HM), Lee and CF bounds, gamma = 2
 # gamma = 2
 
-lhs_values_hm_2 = [LHS(eeb_u_hm_2, eea_l_hm_2, gamma_2, z) for z in z_values]
-rhs_values_hm_2 = [RHS(eeb_l_hm_2, eea_u_hm_2, gamma_2, z) for z in z_values]
+rhs_values_hm_2 = [RHS(eeb_u_hm_2, eea_l_hm_2, gamma_2, z) for z in z_values]
+lhs_values_hm_2 = [LHS(eeb_l_hm_2, eea_u_hm_2, gamma_2, z) for z in z_values]
 
-lhs_values_Lee_2 = [LHS(eeb_u_Lee_2, eea_l_Lee_2, gamma_2, z) for z in z_values]
-rhs_values_Lee_2 = [RHS(eeb_l_Lee_2, eea_u_Lee_2, gamma_2, z) for z in z_values]
+rhs_values_Lee_2 = [RHS(eeb_u_Lee_2, eea_l_Lee_2, gamma_2, z) for z in z_values]
+lhs_values_Lee_2 = [LHS(eeb_l_Lee_2, eea_u_Lee_2, gamma_2, z) for z in z_values]
 
-lhs_values_CF_2 = [LHS(eeb_u_CF_2, eea_l_CF_2, gamma_2, z) for z in z_values]
-rhs_values_CF_2 = [RHS(eeb_l_CF_2, eea_u_CF_2, gamma_2, z) for z in z_values]
+rhs_values_CF_2 = [RHS(eeb_u_CF_2, eea_l_CF_2, gamma_2, z) for z in z_values]
+lhs_values_CF_2 = [LHS(eeb_l_CF_2, eea_u_CF_2, gamma_2, z) for z in z_values]
 
 # Calculate LHS and RHS values for Horowitz-Manski (HM), Lee and CF bounds in levels
 
 # gamma_0 = 0
 
-lhs_values_hm_level = [LHS(eeb_u_hm_level, eea_l_hm_level, gamma_0, z) for z in z_values]
-rhs_values_hm_level = [RHS(eeb_l_hm_level, eea_u_hm_level, gamma_0, z) for z in z_values]
+rhs_values_hm_level = [RHS(eeb_u_hm_level, eea_l_hm_level, gamma_0, z) for z in z_values]
+lhs_values_hm_level = [LHS(eeb_l_hm_level, eea_u_hm_level, gamma_0, z) for z in z_values]
 
-lhs_values_Lee_level = [LHS(eeb_u_Lee_level, eea_l_Lee_level, gamma_0, z) for z in z_values]
-rhs_values_Lee_level = [RHS(eeb_l_Lee_level, eea_u_Lee_level, gamma_0, z) for z in z_values]
+rhs_values_Lee_level = [RHS(eeb_u_Lee_level, eea_l_Lee_level, gamma_0, z) for z in z_values]
+lhs_values_Lee_level = [LHS(eeb_l_Lee_level, eea_u_Lee_level, gamma_0, z) for z in z_values]
 
-lhs_values_CF_level = [LHS(eeb_u_CF_level, eea_l_CF_level, gamma_0, z) for z in z_values]
-rhs_values_CF_level = [RHS(eeb_l_CF_level, eea_u_CF_level, gamma_0, z) for z in z_values]
-
-
-# # Create a figure with three subplots (axes)
-# fig = Figure();
-# ax1 = Axis(fig[1, 1], xlabel="δ", ylabel="Maximum Egalitarian Equivalent Regret", title="Horowitz-Manski Bounds")
-# ax2 = Axis(fig[1, 2], xlabel="δ", title="Lee Bounds")
-# ax3 = Axis(fig[1, 3], xlabel="δ", title="Chen-Flores Bounds")
-
-# # Plot LHS and RHS on the first axis (Horowitz-Manski bounds)
-# lines!(ax1, z_values, lhs_values_hm_2, label="LHS")
-# lines!(ax1, z_values, rhs_values_hm_2, label="RHS")
-
-# # Plot LHS and RHS on the second axis (Lee bounds)
-# lines!(ax2, z_values, lhs_values_Lee_2, label="LHS")
-# lines!(ax2, z_values, rhs_values_Lee_2, label="RHS")
-
-# # Plot LHS and RHS on the third axis (Chen-Flores bounds)
-# lines!(ax3, z_values, lhs_values_CF_2, label="LHS")
-# lines!(ax3, z_values, rhs_values_CF_2, label="RHS")
-
-# # Link the y-axes of both plots
-# linkyaxes!(ax1, ax2, ax3)
-# # linkxaxes!(ax1, ax2, ax3)
-
-# fig
-
-# # Save the figure
-# save("jobcorps_ota.png", fig)
+rhs_values_CF_level = [RHS(eeb_u_CF_level, eea_l_CF_level, gamma_0, z) for z in z_values]
+lhs_values_CF_level = [LHS(eeb_l_CF_level, eea_u_CF_level, gamma_0, z) for z in z_values]
 
 
 # Create a figure with six subplots (axes)
