@@ -1,1 +1,1 @@
-Table 2 comes from [Egalitarian Equivalent Treatment Effect Estimation](https://osf.io/ey3b8/).
+Table 2 comes from [Egalitarian Equivalent Treatment Effect Estimation](https://osf.io/ey3b8/). The code necessary to reproduce it is available there.
