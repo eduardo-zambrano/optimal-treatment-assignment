@@ -1,0 +1,1 @@
+Table 2 comes from [Egalitarian Equivalent Treatment Effect Estimation](https://osf.io/ey3b8/).
